@@ -13,4 +13,4 @@ Or
 Use this as a template and create a new repository!
 ```
 
-[Licensing](/LICENSE.md)
+[Licensing](/LICENSE)
