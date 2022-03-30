@@ -8,7 +8,9 @@ __This is my Defaut-Theme when i am doing a project with mudblazor and mysql.__
 
 Setup:
 ```
-Just clone the repository and you Should be good to go!
+Just clone the repository and you should be good to go!
+Or
+Use this as a template and create a new repository!
 ```
 
 [Licensing](/LICENSE.md)
