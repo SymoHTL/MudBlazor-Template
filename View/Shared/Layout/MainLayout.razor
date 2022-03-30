@@ -1,0 +1,44 @@
+﻿@inherits LayoutComponentBase
+@inject IThemeHandler _themeHandler
+@inject NavigationManager _nav
+@inject ProtectedLocalStorage _local
+@implements IDisposable
+
+<MudDialogProvider
+    CloseButton="true"
+    DisableBackdropClick="false"
+    Position="DialogPosition.Center"
+    CloseOnEscapeKey="true"/>
+<MudSnackbarProvider/>
+<MudThemeProvider Theme="_themeHandler.Theme"/>
+
+<MudLayout>
+    <SideMenu/>
+    <ThemeMenu/>
+    <ThemeButton/>
+    <MudMainContent>
+        <MudContainer Class="mt-4">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+<MudScrollToTop Style="z-index: 6000">
+    <MudFab Color="Color.Tertiary" Icon="@Icons.Filled.ArrowCircleUp"/>
+</MudScrollToTop>
+
+@code {
+
+    protected override void OnInitialized() {
+        _themeHandler.ThemeChange += Invoker;
+    }
+
+    public void Dispose() {
+        _themeHandler.ThemeChange -= Invoker;
+    }
+
+    private async void Invoker() {
+        await InvokeAsync(StateHasChanged);
+    }
+
+}

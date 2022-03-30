@@ -1,0 +1,19 @@
+﻿@inject IThemeHandler _themeHandler
+
+<div class="px-4 py-2 rounded-tl-xl theme-button" onclick="@(() => _themeHandler.UpdateThemeMenu(true))">
+    <MudTooltip Arrow="true" Placement="Placement.Left" Text="Themes">
+        <MudIcon Icon="@Icons.Material.Filled.Brush" Style="color: #05192d"/>
+    </MudTooltip>
+</div>
+
+<style>
+    .theme-button {
+        position: fixed;
+        bottom: 0;
+        background-color: rgba(var(--mud-palette-primary-rgb), 0.5);
+        z-index: 4999;
+        right: 0;
+        cursor: pointer;
+        box-shadow: rgba(55,55,55,0.15) 0 0 2px 0, rgba(55,55,55,0.15) 0 8px 12px 0;
+    }
+</style>
