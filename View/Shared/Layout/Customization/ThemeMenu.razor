@@ -6,7 +6,7 @@
            Open="_themeHandler.ThemeMenuShown"
            Elevation="1" OpenChanged="@(async e => { _themeHandler.UpdateThemeMenu(e); await _local.SetAsync("Theme", new Theme {DarkMode = _themeHandler.DarkMode, Primary = _themeHandler.Theme.Palette.Primary.ToString(), Secondary = _themeHandler.Theme.Palette.Secondary.ToString(), ESideMenuState = _themeHandler.ESideMenuState}); })"
            Variant="@DrawerVariant.Temporary"
-           Width="420px" Style="z-index: 5000">
+           Width="425px" Style="z-index: 5000">
     <MudDrawerHeader Class="align-center">
         <MudText Typo="Typo.body1">
             <b>Theme</b>
