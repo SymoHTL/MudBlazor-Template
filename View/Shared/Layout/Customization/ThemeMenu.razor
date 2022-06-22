@@ -1,10 +1,10 @@
-﻿@inject IThemeHandler _themeHandler
-@inject ProtectedLocalStorage _local
+﻿@inject IThemeHandler ThemeHandler
+@inject ProtectedLocalStorage Local
 @implements IDisposable
 
 <MudDrawer Anchor="Anchor.Right"
-           Open="_themeHandler.ThemeMenuShown"
-           Elevation="1" OpenChanged="@(async e => { _themeHandler.UpdateThemeMenu(e); await _local.SetAsync("Theme", new Theme {DarkMode = _themeHandler.DarkMode, Primary = _themeHandler.Theme.Palette.Primary.ToString(), Secondary = _themeHandler.Theme.Palette.Secondary.ToString(), ESideMenuState = _themeHandler.ESideMenuState}); })"
+           Open="ThemeHandler.ThemeMenuShown"
+           Elevation="1" OpenChanged="HandleDrawerOpenChanged"
            Variant="@DrawerVariant.Temporary"
            Width="425px" Style="z-index: 5000">
     <MudDrawerHeader Class="align-center">
@@ -14,7 +14,7 @@
         <MudSpacer/>
         <MudIconButton Color="Color.Default"
                        Icon="@Icons.Material.Filled.Close"
-                       OnClick="@(() => _themeHandler.UpdateThemeMenu(false))"
+                       OnClick="@(() => ThemeHandler.UpdateThemeMenu(false))"
                        Size="Size.Small"/>
     </MudDrawerHeader>
     <MudDivider/>
@@ -27,7 +27,7 @@
             <MudItem xs="6">
                 <MudButton Class="mode-button"
                            FullWidth="true"
-                           OnClick="@(() => _themeHandler.UpdateMode(false))"
+                           OnClick="@(() => ThemeHandler.UpdateMode(false))"
                            Style="background: white;">
                     <ChildContent>
                         <MudIcon Color="Color.Primary"
@@ -38,7 +38,7 @@
             <MudItem xs="6">
                 <MudButton Class="mode-button"
                            FullWidth="true"
-                           OnClick="@(() => _themeHandler.UpdateMode(true))"
+                           OnClick="@(() => ThemeHandler.UpdateMode(true))"
                            Style="background: #333333;">
                     <ChildContent>
                         <MudIcon Icon="@Icons.Material.Filled.DarkMode"
@@ -48,7 +48,7 @@
             </MudItem>
         </MudGrid>
         <MudForm>
-            <MudRadioGroup T="ESideMenuState" SelectedOption="_themeHandler.ESideMenuState" SelectedOptionChanged="_themeHandler.UpdateSideMenu">
+            <MudRadioGroup T="ESideMenuState" SelectedOption="ThemeHandler.ESideMenuState" SelectedOptionChanged="ThemeHandler.UpdateSideMenu">
                 <MudRadio Option="@(ESideMenuState.Minimized)" Color="Color.Primary">Minimize</MudRadio>
                 <MudRadio Option="@(ESideMenuState.Responsive)" Color="Color.Secondary">Responsive</MudRadio>
                 <MudRadio Option="@(ESideMenuState.Maximized)" Color="Color.Primary">Maximize</MudRadio>
@@ -59,11 +59,11 @@
                 <TitleContent>
                     <div class="d-flex justify-content-between">
                         <MudText Class="align-middle" Inline="true" Typo="Typo.h6">Primary Color</MudText>
-                        <div class="w-50 rounded py-4" style="@($"background-color:{_themeHandler.Theme.Palette.Primary};")"></div>
+                        <div class="w-50 rounded py-4" style="@($"background-color:{ThemeHandler.Theme.Palette.Primary};")"></div>
                     </div>
                 </TitleContent>
                 <ChildContent>
-                    <MudColorPicker Value="_themeHandler.Theme.Palette.Primary" ValueChanged="_themeHandler.UpdatePrimary" DisableAlpha="true" DisableToolbar="false" ColorPickerMode="ColorPickerMode.RGB" PickerVariant="PickerVariant.Static" Elevation="0"/>
+                    <MudColorPicker Value="ThemeHandler.Theme.Palette.Primary" ValueChanged="HandlePrimaryColorChanged" DisableAlpha="true" DisableToolbar="false" ColorPickerMode="ColorPickerMode.RGB" PickerVariant="PickerVariant.Static" Elevation="0"/>
                 </ChildContent>
             </MudExpansionPanel>
         </MudExpansionPanels>
@@ -72,11 +72,11 @@
                 <TitleContent>
                     <div class="d-flex justify-content-between">
                         <MudText Class="align-middle" Inline="true" Typo="Typo.h6">Secondary Color</MudText>
-                        <div class="w-50 rounded py-4" style="@($"background-color:{_themeHandler.Theme.Palette.Secondary};")"></div>
+                        <div class="w-50 rounded py-4" style="@($"background-color:{ThemeHandler.Theme.Palette.Secondary};")"></div>
                     </div>
                 </TitleContent>
                 <ChildContent>
-                    <MudColorPicker Value="_themeHandler.Theme.Palette.Secondary" ValueChanged="_themeHandler.UpdateSecondary" DisableAlpha="true" DisableToolbar="false" ColorPickerMode="ColorPickerMode.RGB" PickerVariant="PickerVariant.Static" Elevation="0"/>
+                    <MudColorPicker Value="ThemeHandler.Theme.Palette.Secondary" ValueChanged="HandleSecondaryColorChanged" DisableAlpha="true" DisableToolbar="false" ColorPickerMode="ColorPickerMode.RGB" PickerVariant="PickerVariant.Static" Elevation="0"/>
                 </ChildContent>
             </MudExpansionPanel>
         </MudExpansionPanels>
@@ -84,28 +84,41 @@
 </MudDrawer>
 
 <MudOverlay DarkBackground="false"
-            OnClick="@(() => _themeHandler.UpdateThemeMenu(false))"
-            Visible="_themeHandler.ThemeMenuShown"/>
-
-<style>
-    .mode-button {
-        border: 1px solid var(--mud-palette-table-lines);
-        height: 50px;
-    }
-</style>
+            OnClick="@(() => ThemeHandler.UpdateThemeMenu(false))"
+            Visible="ThemeHandler.ThemeMenuShown"/>
 
 @code {
 
     protected override void OnInitialized() {
-        _themeHandler.ThemeChange += Invoker;
+        ThemeHandler.ThemeChange += Invoker;
     }
 
     public void Dispose() {
-        _themeHandler.ThemeChange -= Invoker;
+        ThemeHandler.ThemeChange -= Invoker;
     }
 
     private async void Invoker() {
         await InvokeAsync(StateHasChanged);
+    }
+
+    private async void HandleDrawerOpenChanged(bool value) {
+        ThemeHandler.UpdateThemeMenu(value);
+        await Local.SetAsync("Theme", new Theme {
+            DarkMode = ThemeHandler.DarkMode,
+            Primary = ThemeHandler.Theme.Palette.Primary.ToString(),
+            Secondary = ThemeHandler.Theme.Palette.Secondary.ToString(),
+            ESideMenuState = ThemeHandler.ESideMenuState
+        });
+    }
+
+    private void HandlePrimaryColorChanged(MudColor color) {
+        ThemeHandler.Theme.Palette.Primary = color;
+        ThemeHandler.Rerender();
+    }
+
+    private void HandleSecondaryColorChanged(MudColor color) {
+        ThemeHandler.Theme.Palette.Secondary = color;
+        ThemeHandler.Rerender();
     }
 
 }

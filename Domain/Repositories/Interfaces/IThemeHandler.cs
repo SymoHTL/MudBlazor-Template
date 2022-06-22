@@ -9,12 +9,11 @@ public interface IThemeHandler {
     ESideMenuState ESideMenuState { get; set; }
 
     event Action ThemeChange;
+    void Rerender();
+    void UpdateThemeMenu(bool shown);
+
     void UpdateMode(bool darkMode);
     void UpdateSideMenu(ESideMenuState state);
-    void UpdateThemeMenu(bool shown);
-    void UpdateTheme(MudTheme theme);
-    void UpdatePrimary(MudColor color);
-    void UpdateSecondary(MudColor color);
 
     void UpdateAll(Theme theme);
 }

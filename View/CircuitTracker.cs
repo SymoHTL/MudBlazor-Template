@@ -1,4 +1,6 @@
-﻿namespace View;
+﻿using Model.Entities.Theme;
+
+namespace View;
 
 public class CircuitTracker : CircuitHandler {
     private readonly ProtectedLocalStorage _local;
@@ -15,9 +17,26 @@ public class CircuitTracker : CircuitHandler {
     }
 
     private async Task GetStuff() {
-        var theme = (await _local.GetAsync<Theme>("Theme")).Value;
-        if (theme is null) return;
+        try {
+            var theme = (await _local.GetAsync<Theme>("Theme")).Value;
+            if (theme is null) return;
 
-        _theme.UpdateAll(theme);
+            _theme.UpdateAll(theme);
+        }
+        catch (Exception e) {
+            if (e is CryptographicException) {
+                Console.WriteLine(e);
+                Console.WriteLine(
+                    "####################################################################################");
+                Console.WriteLine("                         LocalStorage is now getting deleted!");
+                Console.WriteLine(
+                    "####################################################################################");
+                await _local.DeleteAsync("Theme");
+            }
+            else {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
     }
 }

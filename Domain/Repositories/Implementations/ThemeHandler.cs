@@ -26,11 +26,8 @@ public class ThemeHandler : IThemeHandler {
 
     private readonly Palette _lightPalette = new();
 
-    public event Action? ThemeChange;
-
     public MudTheme Theme { get; set; } = new() {
         Palette = new Palette {
-            Primary = Colors.Green.Default,
             Black = "#27272f",
             Background = "rgb(21,27,34)",
             BackgroundGrey = "#27272f",
@@ -66,12 +63,18 @@ public class ThemeHandler : IThemeHandler {
         }
     };
 
+    public event Action? ThemeChange;
     public bool ThemeMenuShown { get; set; }
-    public bool DarkMode { get; set; }
+    public bool DarkMode { get; set; } = true;
 
     public bool SideOpenMini { get; set; } = true;
     public bool SideOpen { get; set; }
-    public ESideMenuState ESideMenuState { get; set; }
+    public ESideMenuState ESideMenuState { get; set; } = ESideMenuState.Responsive;
+
+    public void Rerender() {
+        ThemeChange?.Invoke();
+    }
+
 
     public void UpdateThemeMenu(bool shown) {
         ThemeMenuShown = shown;
@@ -99,25 +102,10 @@ public class ThemeHandler : IThemeHandler {
                 SideOpen = true;
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(state), state, null);
+                throw new NotSupportedException();
         }
 
         ESideMenuState = state;
-        ThemeChange?.Invoke();
-    }
-
-    public void UpdateTheme(MudTheme theme) {
-        Theme = theme;
-        ThemeChange?.Invoke();
-    }
-
-    public void UpdatePrimary(MudColor color) {
-        Theme.Palette.Primary = color;
-        ThemeChange?.Invoke();
-    }
-
-    public void UpdateSecondary(MudColor color) {
-        Theme.Palette.Secondary = color;
         ThemeChange?.Invoke();
     }
 
@@ -126,24 +114,6 @@ public class ThemeHandler : IThemeHandler {
         Theme.Palette = theme.DarkMode ? _darkPalette : _lightPalette;
         Theme.Palette.Primary = theme.Primary;
         Theme.Palette.Secondary = theme.Secondary;
-        switch (theme.ESideMenuState) {
-            case ESideMenuState.Minimized:
-                SideOpenMini = false;
-                SideOpen = false;
-                break;
-            case ESideMenuState.Responsive:
-                SideOpenMini = true;
-                SideOpen = false;
-                break;
-            case ESideMenuState.Maximized:
-                SideOpenMini = false;
-                SideOpen = true;
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
-
-        ESideMenuState = theme.ESideMenuState;
-        ThemeChange?.Invoke();
+        UpdateSideMenu(theme.ESideMenuState);
     }
 }

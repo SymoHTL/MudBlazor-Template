@@ -1,4 +1,4 @@
-﻿namespace Model.Entities;
+﻿namespace Model.Entities.Theme;
 
 public enum ESideMenuState {
     Minimized,

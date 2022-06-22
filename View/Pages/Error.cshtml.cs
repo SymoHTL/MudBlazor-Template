@@ -1,10 +1,4 @@
-﻿#region
-
-
-
-#endregion
-
-namespace View.Pages;
+﻿namespace View.Pages;
 
 [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 [IgnoreAntiforgeryToken]

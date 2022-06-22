@@ -1,5 +1,4 @@
-﻿#region
-
+﻿global using System.Security.Cryptography;
 global using Domain.Repositories.Interfaces;
 global using Microsoft.AspNetCore.Components.Server.Circuits;
 global using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
@@ -14,5 +13,3 @@ global using View;
 global using System.Diagnostics;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Mvc.RazorPages;
-
-#endregion

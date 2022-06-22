@@ -1,35 +1,21 @@
-﻿@inject NavigationManager _nav
-@inject IThemeHandler _themeHandler
+﻿@inject NavigationManager Nav
+@inject IThemeHandler ThemeHandler
 @implements IDisposable
-
-@*MudDrawer Breakpoint="Breakpoint.Md"
-           Class="side-menu"
-           Elevation="0"
-           MiniWidth="100px"
-           OpenMiniOnHover="true"
-           Variant="DrawerVariant.Mini"
-           Width="280px"
-           DisableOverlay="true"
-           OpenChanged="@(e => {
-                            if (Minimize) return;
-                            SideMenuDrawerOpenChanged.InvokeAsync(e);
-                        })"
-           Open="SideMenuDrawerOpen">*@
 
 <MudDrawer Breakpoint="Breakpoint.Md"
            Class="side-menu"
            Elevation="0"
            MiniWidth="100px"
-           OpenMiniOnHover="_themeHandler.SideOpenMini"
+           OpenMiniOnHover="ThemeHandler.SideOpenMini"
            Variant="DrawerVariant.Mini"
-           Width="280px" OpenChanged="@(value => {if (_themeHandler.SideOpenMini) { _themeHandler.SideOpen = value; } })"
+           Width="280px" OpenChanged="@(value => {if (ThemeHandler.SideOpenMini) { ThemeHandler.SideOpen = value; } })"
            DisableOverlay="true"
-           Open="_themeHandler.SideOpen">
+           Open="ThemeHandler.SideOpen">
     <MudDrawerHeader Class="align-center d-flex justify-center pa-0">
         <MudIcon Color="Color.Primary"
                  Icon="@Icons.Filled.Home"
                  Size="Size.Large"
-                 @onclick="@(() => _nav.NavigateTo(""))"
+                 @onclick="@(() => Nav.NavigateTo(""))"
                  role="button"/>
     </MudDrawerHeader>
     <MudNavMenu>
@@ -67,16 +53,19 @@
 @code {
 
     protected override void OnInitialized() {
-        _themeHandler.ThemeChange += Invoker;
+        ThemeHandler.ThemeChange += Invoker;
     }
 
+
     public void Dispose() {
-        _themeHandler.ThemeChange -= Invoker;
+        ThemeHandler.ThemeChange -= Invoker;
     }
+
 
     private async void Invoker() {
         await InvokeAsync(StateHasChanged);
     }
+
 
     private List<MenuSectionItemModel> _menuSectionItems = new() {
         new MenuSectionItemModel {

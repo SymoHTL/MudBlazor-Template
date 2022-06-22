@@ -1,4 +1,4 @@
-﻿namespace Model.Entities;
+﻿namespace Model.Entities.Theme;
 
 public class Theme {
     public bool DarkMode { get; set; } = true;

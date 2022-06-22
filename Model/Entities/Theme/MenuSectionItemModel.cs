@@ -1,4 +1,4 @@
-﻿namespace Model.Entities;
+﻿namespace Model.Entities.Theme;
 
 public class MenuSectionItemModel {
     public string Title { get; set; } = null!;

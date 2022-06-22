@@ -1,7 +1,5 @@
 ﻿@inherits LayoutComponentBase
-@inject IThemeHandler _themeHandler
-@inject NavigationManager _nav
-@inject ProtectedLocalStorage _local
+@inject IThemeHandler ThemeHandler
 @implements IDisposable
 
 <MudDialogProvider
@@ -10,7 +8,7 @@
     Position="DialogPosition.Center"
     CloseOnEscapeKey="true"/>
 <MudSnackbarProvider/>
-<MudThemeProvider Theme="_themeHandler.Theme"/>
+<MudThemeProvider Theme="ThemeHandler.Theme"/>
 
 <MudLayout>
     <SideMenu/>
@@ -30,15 +28,18 @@
 @code {
 
     protected override void OnInitialized() {
-        _themeHandler.ThemeChange += Invoker;
+        ThemeHandler.ThemeChange += Invoker;
     }
 
+
     public void Dispose() {
-        _themeHandler.ThemeChange -= Invoker;
+        ThemeHandler.ThemeChange -= Invoker;
     }
+
 
     private async void Invoker() {
         await InvokeAsync(StateHasChanged);
     }
+
 
 }
