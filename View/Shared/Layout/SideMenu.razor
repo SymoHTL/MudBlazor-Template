@@ -12,11 +12,10 @@
            DisableOverlay="true"
            Open="ThemeHandler.SideOpen">
     <MudDrawerHeader Class="align-center d-flex justify-center pa-0">
-        <MudIcon Color="Color.Primary"
+        <MudIconButton Color="Color.Primary"
                  Icon="@Icons.Filled.Home"
                  Size="Size.Large"
-                 @onclick="@(() => Nav.NavigateTo(""))"
-                 role="button"/>
+                 Href="/"/>
     </MudDrawerHeader>
     <MudNavMenu>
         @foreach (var navItem in _menuSectionItems) {
