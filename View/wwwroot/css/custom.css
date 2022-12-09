@@ -17,3 +17,18 @@
     color: white;
     background: var(--mud-palette-secondary);
 }
+
+
+.mud-scroll-to-top.visible{
+    position: fixed!important;
+    bottom: 0 !important;
+    right: 56px!important;
+}
+
+.mud-scroll-to-top button{
+    border-radius: 0;
+    width: 56px!important;
+    height: 40px!important;
+    border-top-left-radius: 24px !important;
+    border-top-right-radius: 24px !important;
+}
